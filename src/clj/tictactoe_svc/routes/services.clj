@@ -12,7 +12,7 @@
                              :description "Sample Services"}}}}
     
     (context "/api" []
-      :tags ["thingie"]
+      :tags ["Tic Tac Toe"]
       
       (GET "/plus" []
         :return       Long
