@@ -50,10 +50,11 @@
 
 
 (s/fdef evaluate-row
-  :args (s/cat :row ::row))
+  :args (s/cat :row ::row)
+  :ret ::cell)
 (defn evaluate-row [row]
   (reduce (fn [x y] (if (= x y) x nil)) row))
-  
+
 
 (s/fdef evaluate-rows
   :args (s/cat :board ::board)
@@ -84,7 +85,6 @@
         rt  (transpose (evaluate-rows (transpose board)))
         rd0 (evaluate-diagonal board)
         rdt (into [] (mirror (evaluate-diagonal (mirror board))))]
-    (println r0 rt rd0 rdt)
     (cond
       (winner r0) r0
       (winner rt) rt

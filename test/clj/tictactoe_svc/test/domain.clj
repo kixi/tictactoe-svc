@@ -17,3 +17,10 @@
 
 (s/exercise-fn `ttt/other-player)
 
+(stest/check `ttt/mirror)
+(gen/generate (s/gen ::ttt/winner))
+
+
+(deftest t-transpose
+  (testing ""
+    (is (= [[1]] (ttt/transpose [[1]])))))
