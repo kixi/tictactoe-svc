@@ -1,7 +1,8 @@
 (ns tictactoe-svc.routes.services
   (:require [ring.util.http-response :refer :all]
             [compojure.api.sweet :refer :all]
-            [schema.core :as s]))
+            [schema.core :as s]
+            [tictactoe-svc.game-state-in-memory :as state]))
 
 (def service-routes
   (api
@@ -13,6 +14,11 @@
     
     (context "/api" []
       :tags ["Tic Tac Toe"]
+      (POST "/games" []
+          :return       java.util.UUID
+          :form-params  [player :- String]
+          :summary      "creates a new game"
+          (ok (state/create-game! (keyword player))))
       
       (GET "/plus" []
         :return       Long
@@ -43,3 +49,5 @@
         :header-params [x :- Long, y :- Long]
         :summary     "x^y with header-parameters"
         (ok (long (Math/pow x y)))))))
+
+state/games
