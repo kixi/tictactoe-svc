@@ -17,6 +17,7 @@
                  [metosin/compojure-api "2.0.0-alpha28"]
                  [metosin/muuntaja "0.6.3"]
                  [metosin/ring-http-response "0.9.1"]
+                 [metosin/spec-tools "0.8.2"]
                  [mount "0.1.15"]
                  [nrepl "0.5.3"]
                  [org.clojure/clojure "1.10.0"]
