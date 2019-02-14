@@ -1,7 +1,8 @@
 (ns tictactoe-svc.game-state-in-memory
-  (:require [tictactoe-svc.domain :as d]))
+  (:require [tictactoe-svc.domain :as d]
+            [mount.core :refer [defstate]]))
 
-(def games (atom {}))
+(defstate games :start (atom {}))
 
 (defn create-game! [player]
   (let [id (java.util.UUID/randomUUID)]
@@ -18,4 +19,5 @@
 
 (find-game! (create-game! :o))
 
+games
 
