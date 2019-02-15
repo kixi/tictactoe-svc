@@ -7,8 +7,8 @@
             [tictactoe-svc.domain :as ttt]))
 
 (s/def ::player #{"x" "o"})
-(s/def ::row #{0 1 2})
-(s/def ::col #{0 1 2})
+(s/def ::row int?)
+(s/def ::col int?)
 (s/def ::gameid uuid?)
 (s/def ::games (s/coll-of ::gameid))
 (s/def ::any identity)
@@ -43,8 +43,8 @@
            (let [game (state/find-game! id)]
              (ok game))))
 
-       (POST "/move" []
-         :form-params [player :- ::player, row :- ::row, col :- ::col]
+       (POST "/moves" []
+         :form-params [player :- ::player, row :- ::ttt/range, col :- ::ttt/range]
          :return ::any
          (ok (state/make-move! id {::ttt/player (keyword player)
                                    ::ttt/position [row col]})))))))
