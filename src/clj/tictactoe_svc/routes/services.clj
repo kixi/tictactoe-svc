@@ -7,6 +7,8 @@
             [tictactoe-svc.domain :as ttt]))
 
 (s/def ::player #{"x" "o"})
+(s/def ::row #{0 1 2})
+(s/def ::col #{0 1 2})
 (s/def ::gameid uuid?)
 (s/def ::games (s/coll-of ::gameid))
 (s/def ::any identity)
@@ -26,37 +28,26 @@
      (GET "/" []
        :return ::games
        (ok (keys @state/games)))
+     
+     (POST "/" []
+       :form-params [player :- ::player]
+       :return ::gameid
+       (ok (state/create-game! (keyword player))))
+
      (context "/:id" []
-        :path-params [id :- ::gameid]
-        (GET "/" []
-          :return ::any
-          (fn [req]
-            (let [game (@state/games id)]
-              (println "CONFORM***" (s/conform ::ttt/game game))
-              (ok game))))))))
+       :path-params [id :- ::gameid]
+       
+       (GET "/" []
+         :return ::any
+         (fn [req]
+           (let [game (state/find-game! id)]
+             (ok game))))
 
-@state/games
-
-   #_(context "/api" []
-       (context "/games" []
-         :coercion :spec
-         (resource
-          {:post
-           {:summary "create a new game"
-            :parameters {:form-params (s/keys :req-un [::player])}
-            :responses {200 {:schema ::gameid}}
-            :handler (fn [{{:keys [player]} :form-params}]
-                       (ok (state/create-game! (keyword player))))}
-           :get
-           {:summary "list all games"
-            :responses {200 {:schema ::games}}
-            :handler (fn [req]
-                       (ok (keys @state/games)))}})))
-
-
-
-
-  
+       (POST "/move" []
+         :form-params [player :- ::player, row :- ::row, col :- ::col]
+         :return ::any
+         (ok (state/make-move! id {::ttt/player (keyword player)
+                                   ::ttt/position [row col]})))))))
 
 
 

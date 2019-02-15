@@ -15,9 +15,9 @@
 (defn make-move! [id move]
   (swap! games update id #(d/make-move % move)))
 
-(make-move! (create-game! :o) {::d/player :o ::d/position [0 0]})
+;;(make-move! (create-game! :o) {::d/player :o ::d/position [0 0]})
 
-(find-game! (create-game! :o))
+;;(find-game! (create-game! :o))
 
-games
+;;games
 
