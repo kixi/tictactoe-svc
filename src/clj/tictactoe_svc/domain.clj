@@ -53,12 +53,56 @@
 (defn- mirror [matrix]
   (mapv #(into [] (reverse %1)) matrix))
 
+(defn map-matrix [f m]
+  (mapv (fn [r]
+          (mapv (fn [c] (f c))
+                r))
+        m))
+
+(defn matrix-and [m1 m2]
+  (mapv (fn [r1 r2]
+          (mapv (fn [c1 c2] (and c1 c2)) r1 r2))
+        m1 m2))
 ;;================================
 
 (def initial-board
   [[nil nil nil]
    [nil nil nil]
    [nil nil nil]])
+
+(def winning-rows
+  (map (fn [row] (assoc initial-board row [true true true]))
+       (range 0 3)))
+
+(def winning-cols
+  (map transpose winning-rows))
+
+(def winning-diag1
+  [[true nil nil]
+   [nil true nil]
+   [nil nil true]])
+
+(def winning-diag2
+  (mirror winning-diag1))
+
+(def winning-positions
+  (concat winning-rows winning-cols [winning-diag1] [winning-diag2]))
+
+;;============================================
+
+(defn evaluation-matrix [board player]
+  (map-matrix (fn [cell] (= cell player)) board))
+
+(defn winner-board [board player]
+  (let [em (evaluation-matrix board player)]
+    (->> winning-positions
+         (filter (fn [position]
+                   (= position (matrix-and position em))))
+         (map (fn [winner-pos]
+                (map-matrix (fn [cell]
+                              (if cell player nil))
+                            winner-pos)))
+         first)))
 
 (defn- update-board [board {::keys [player position]}]
   (let [[x y] position]
@@ -69,39 +113,10 @@
 (defn- winner [evaluated-board]
   (some identity (apply concat evaluated-board)))
 
-(defn- find-row-winner [row]
-  (reduce (fn [x y] (if (= x y) x nil)) row))
-
-;;(find-row-winner [:x :x :x])
-;;(find-row-winner [:x :o :x])
-;;(find-row-winner [:x :o nil])
-
-(defn- mark-winner-row [board]
-  (let [rows (for [r board]
-               (find-row-winner r))]
-    (mapv (fn [p] [p p p]) rows)))
-
-;;(mark-winner-row [[:x :x :o] [:x :x :x] [:x :o :x]])
-
-(apply vector '((1 2 3) (1 2 3)))
-(defn- mark-winner-diagonal [board]
-  (let [p (find-row-winner (into []
-                                 (for [p (range 3)]
-                                   (get-in board [p p]))))]
-    [[p nil nil]
-     [nil p nil]
-     [nil nil p]]))
-
 (defn- evaluate-board [board]
-  (let [r0 (mark-winner-row board)
-        rt  (transpose (mark-winner-row (transpose board)))
-        rd0 (mark-winner-diagonal board)
-        rdt (into [] (mirror (mark-winner-diagonal (mirror board))))]
-    (cond
-      (winner r0) r0
-      (winner rt) rt
-      (winner rdt) rdt
-      :else rdt)))
+  (or (winner-board board :x)
+      (winner-board board :o)
+      initial-board))
 
 (defn- board-full [board]
   (every? identity (apply concat board)))
@@ -128,13 +143,13 @@
       (and (not player-won) full?) (assoc ::winner :tie)
       (not (or player-won full?)) (update ::turn other-player))))
 
-;;(require '[clojure.spec.test.alpha :as stest])
+(require '[clojure.spec.test.alpha :as stest])
 ;;(stest/instrument)
 ;;(mark-winner-diagonal (mirror [[0 2 1] [4 1 6] [1 8 9]]))
 ;;
 (-> (create-game :o)
-    (make-move {::player :o ::position [0 2]})
-    (make-move {::player :x ::position [0 1]})
-    (make-move {::player :o ::position [1 1]})
-    (make-move {::player :x ::position [0 0]})
-    (make-move {::player :o ::position [2 0]}))
+(make-move {::player :o ::position [0 2]})
+(make-move {::player :x ::position [0 1]})
+(make-move {::player :o ::position [1 1]})
+(make-move {::player :x ::position [0 0]})
+(make-move {::player :o ::position [2 0]}))
