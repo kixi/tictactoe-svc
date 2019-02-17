@@ -7,20 +7,25 @@
 
 (stest/instrument)
 
-(gen/generate (s/gen ::ttt/player))
-(gen/generate (s/gen ::ttt/game))
+(def evaluate-board #'ttt/evaluate-board)
 
-(ttt/other-player :x)
+(deftest winning-games
+  (testing "winning row"
+    (is (= [[:x :x :x] [nil nil nil] [nil nil nil]]
+           (evaluate-board [[:x :x :x] [:x :o :o] [:o nil nil]]))))
+  (testing "winning col"
+    (is (= [[:x nil nil] [:x nil nil] [:x nil nil]]
+           (evaluate-board [[:x nil :x] [:x :o :o] [:x nil nil]]))))
+  (testing "winning diag"
+    (is (= [[:x nil nil] [nil :x nil] [nil nil :x]]
+         (evaluate-board [[:x nil :x] [:o :x :o] [:o nil :x]]))))
+  (testing "no winning position"
+    (is (= [[nil nil nil] [nil nil nil] [nil nil nil]]
+         (evaluate-board [[:x nil :x] [:o :x :o] [:o nil :o]])))))
 
+(deftest make-move
+  (testing "make a non winning move"
+    (is (= {::ttt/board [[:o nil nil] [nil nil nil] [nil nil nil]], ::ttt/turn :x}
+           (ttt/make-move {::ttt/board [[nil nil nil] [nil nil nil] [nil nil nil]], ::ttt/turn :o}
+                          {::ttt/player :o ::ttt/position [0 0]})))))
 
-(s/exercise ::ttt/row)
-
-(s/exercise-fn `ttt/other-player)
-
-(stest/check `ttt/mirror)
-(gen/generate (s/gen ::ttt/winner))
-
-
-(deftest t-transpose
-  (testing ""
-    (is (= [[1]] (ttt/transpose [[1]])))))

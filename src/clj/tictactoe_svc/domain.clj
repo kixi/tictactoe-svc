@@ -53,13 +53,13 @@
 (defn- mirror [matrix]
   (mapv #(into [] (reverse %1)) matrix))
 
-(defn map-matrix [f m]
+(defn- map-matrix [f m]
   (mapv (fn [r]
           (mapv (fn [c] (f c))
                 r))
         m))
 
-(defn matrix-and [m1 m2]
+(defn- matrix-and [m1 m2]
   (mapv (fn [r1 r2]
           (mapv (fn [c1 c2] (and c1 c2)) r1 r2))
         m1 m2))
@@ -144,12 +144,14 @@
       (not (or player-won full?)) (update ::turn other-player))))
 
 (require '[clojure.spec.test.alpha :as stest])
-;;(stest/instrument)
+(stest/instrument)
 ;;(mark-winner-diagonal (mirror [[0 2 1] [4 1 6] [1 8 9]]))
 ;;
 (-> (create-game :o)
-(make-move {::player :o ::position [0 2]})
-(make-move {::player :x ::position [0 1]})
-(make-move {::player :o ::position [1 1]})
-(make-move {::player :x ::position [0 0]})
-(make-move {::player :o ::position [2 0]}))
+    (make-move {::player :o ::position [0 2]})
+    (make-move {::player :x ::position [0 1]})
+    (make-move {::player :o ::position [1 1]})
+    (make-move {::player :x ::position [0 0]})
+    (make-move {::player :o ::position [2 0]}))
+(create-game :o)
+#:tictactoe-svc.domain{:board [[nil nil nil] [nil nil nil] [nil nil nil]], :turn :o}
