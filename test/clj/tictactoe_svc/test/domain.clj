@@ -25,7 +25,9 @@
 
 (deftest make-move
   (testing "make a non winning move"
-    (is (= {::ttt/board [[:o nil nil] [nil nil nil] [nil nil nil]], ::ttt/turn :x}
-           (ttt/make-move {::ttt/board [[nil nil nil] [nil nil nil] [nil nil nil]], ::ttt/turn :o}
+    (is (= {::ttt/board [[:o nil nil] [nil nil nil] [nil nil nil]],
+            ::ttt/turn :x}
+           (ttt/make-move {::ttt/board [[nil nil nil] [nil nil nil] [nil nil nil]],
+                           ::ttt/turn :o}
                           {::ttt/player :o ::ttt/position [0 0]})))))
 

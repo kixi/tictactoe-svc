@@ -44,6 +44,3 @@
          :return ::ttt/game
          (ok (state/make-move! id {::ttt/player (keyword player)
                                    ::ttt/position [row col]})))))))
-
-
-

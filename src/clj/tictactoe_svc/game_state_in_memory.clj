@@ -4,7 +4,6 @@
 
 (defstate games :start (atom {}))
 
-(s/fdef create-game!)
 (defn create-game! [player]
   (let [id (java.util.UUID/randomUUID)]
     (swap! games assoc id (d/create-game player))
@@ -22,4 +21,6 @@
 ;;(find-game! (create-game! :o))
 
 ;;games
+
+;;(create-game! :o)
 
