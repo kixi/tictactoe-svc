@@ -48,4 +48,3 @@
          :return ::ttt/game
          (ok (dbstate/make-move! id {::ttt/player (keyword player)
                                      ::ttt/position [row col]})))))))
-

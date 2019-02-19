@@ -44,3 +44,8 @@
    :coordinates [dep-vec]
    :repositories (merge @(resolve 'cemerick.pomegranate.aether/maven-central)
                         {"clojars" "https://clojars.org/repo"})))
+
+
+;; (add-dependency '[net.mikera/core.matrix "0.62.0"])
+;; (require '[clojure.core.matrix :as m])
+;; (m/transpose [[1 2] [3 4]])

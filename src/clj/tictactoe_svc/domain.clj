@@ -120,14 +120,14 @@
 (defn- board-full [board]
   (every? identity (apply concat board)))
 
-(defn create-game [starting-player]
-  {::board initial-board
-   ::turn starting-player})
-
 (defn- other-player [player]
   (cond (= player :x) :o
         (= player :o) :x
         :else nil))
+
+(defn create-game [starting-player]
+  {::board initial-board
+   ::turn starting-player})
 
 (defn make-move [gamestate move]
   (when (not= (::turn gamestate) (::player move))
