@@ -21,6 +21,10 @@
     :coercion :spec}
 
    (context "/games" []
+     (GET "/echo" []
+       :query-params [param :- string?]
+       :return string?
+       (ok (str "hello world " param)))
      (GET "/" []
        :return ::games
        (ok (keys @state/games)))
@@ -44,3 +48,4 @@
          :return ::ttt/game
          (ok (state/make-move! id {::ttt/player (keyword player)
                                    ::ttt/position [row col]})))))))
+

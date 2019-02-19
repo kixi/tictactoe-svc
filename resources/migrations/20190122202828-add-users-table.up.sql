@@ -1,9 +1,13 @@
-CREATE TABLE users
-(id VARCHAR(20) PRIMARY KEY,
- first_name VARCHAR(30),
- last_name VARCHAR(30),
- email VARCHAR(30),
- admin BOOLEAN,
- last_login TIMESTAMP,
- is_active BOOLEAN,
- pass VARCHAR(300));
+CREATE TABLE IF NOT EXISTS TICTACTOE
+(id uuid NOT NULL,
+ c00 VARCHAR(1),
+ c01 VARCHAR(1),
+ c02 VARCHAR(1),
+ c10 VARCHAR(1),
+ c11 VARCHAR(1),
+ c12 VARCHAR(1),
+ c20 VARCHAR(1),
+ c21 VARCHAR(1),
+ c22 VARCHAR(1),
+ turn varchar(1),
+ winner varchar(1));
