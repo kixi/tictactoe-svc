@@ -3,7 +3,7 @@
             [compojure.api.sweet :refer :all]
             [clojure.spec.alpha :as s]
             [spec-tools.spec :as spec]
-            [tictactoe-svc.game-state-in-memory :as state]
+            [tictactoe-svc.game-state-in-db :as dbstate]
             [tictactoe-svc.domain :as ttt]))
 
 (s/def ::player #{"x" "o"})
@@ -21,18 +21,18 @@
     :coercion :spec}
 
    (context "/games" []
-     (GET "/echo" []
-       :query-params [param :- string?]
-       :return string?
-       (ok (str "hello world " param)))
+     ;; (GET "/echo" []
+     ;;   :query-params [param :- string?]
+     ;;   :return string?
+     ;;   (ok (str "hello " param)))
      (GET "/" []
        :return ::games
-       (ok (keys @state/games)))
+       (ok (dbstate/find-games!)))
      
      (POST "/" []
        :form-params [player :- ::player]
        :return ::gameid
-       (ok  (state/create-game! (keyword player))))
+       (ok  (dbstate/create-game! (keyword player))))
 
      (context "/:id" []
        :path-params [id :- ::gameid]
@@ -40,12 +40,12 @@
        (GET "/" []
          :return ::ttt/game
          (fn [req]
-           (let [game (state/find-game! id)]
+           (let [game (dbstate/find-game! id)]
              (ok game))))
 
        (POST "/moves" []
          :form-params [player :- ::player, row :- ::ttt/range, col :- ::ttt/range]
          :return ::ttt/game
-         (ok (state/make-move! id {::ttt/player (keyword player)
-                                   ::ttt/position [row col]})))))))
+         (ok (dbstate/make-move! id {::ttt/player (keyword player)
+                                     ::ttt/position [row col]})))))))
 

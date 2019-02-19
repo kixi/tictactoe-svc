@@ -2,7 +2,7 @@
   (:require [tictactoe-svc.domain :as d]
             [mount.core :refer [defstate]]))
 
-(defstate games :start (atom {}))
+(defonce games (atom {}))
 
 (defn create-game! [player]
   (let [id (java.util.UUID/randomUUID)]
